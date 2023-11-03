@@ -1,30 +1,72 @@
-<template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+<template>  
+    <div>
+        <form @submit.prevent>
+            <input 
+                v-bind:value="name"
+                @input="name = $event.target.value"
+                type="text"
+                placeholder="Name">
+            <input 
+                v-bind:value="description"
+                @input="description = $event.target.value"
+                type="text" 
+                placeholder="Description">
+            <button @click="addPost">Add post</button>
+        </form>
+        <div>
+            <div class="post" v-for="post in posts" :key="post.id">
+                <div><strong>Name</strong> {{ post.name }}</div>
+                <div><strong>Description</strong> {{ post.description }}</div>
+            </div>
+        </div>
+    </div>
 </template>
 
+<script>
+    export default {
+        data() {
+            return {
+                posts: [
+                    {id: 1, name: 'Js', description: 'Description'},
+                    {id: 2, name: 'Js2', description: 'Description2'},
+                    {id: 3, name: 'Js3', description: 'Description3'},
+                ],
+                name: '',
+                description: '',
+
+            }
+        },
+
+        methods: {
+            addPost() {
+                const newPost = {
+                    id: Date.now(),
+                    name: this.name,
+                    description: this.description
+                }
+
+                this.posts.push(newPost);
+                this.name = '';
+                this.description = '';
+            },
+            
+
+        }
+       
+    }
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-nav {
-  padding: 30px;
+.post {
+    margin: 14px;
+    padding: 15px;
+    border: 2px solid teal;
 }
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
