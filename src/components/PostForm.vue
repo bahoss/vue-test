@@ -1,17 +1,24 @@
 <template>
-    <div class="form">
-        <form @submit.prevent>
+        <form @submit.prevent class="form">
             <input 
+                class="input"
                 v-model="post.name"
                 type="text"
-                placeholder="Name">
+                placeholder="Name"
+            >
             <input 
+                class="input"
                 v-model="post.description"
                 type="text" 
-                placeholder="Description">
-            <button @click="addPost">Add post</button>
+                placeholder="Description"
+            >
+            <my-button 
+                @click="addPost"
+                style="align-self: flex-end"
+            >
+                Create
+            </my-button>
         </form>
-    </div>
 </template>
 
 <script>
@@ -43,6 +50,12 @@ export default {
 <style scoped>
 .form {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input {
+    padding: 10px;
+    border: 1px solid teal;
 }
 </style>
