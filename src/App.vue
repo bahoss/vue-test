@@ -1,6 +1,6 @@
 <template>  
     <div class="wrapper">
-      <post-list :posts="posts"></post-list>
+      <post-list :posts="posts" @remove="removePost"></post-list>
       <post-form @create="addPost"></post-form>
     </div>
 </template>
@@ -29,6 +29,9 @@
                 this.posts.push(newPost);
               
             },
+            removePost(post) {
+                this.posts = this.posts.filter(p => p.id !== post.id)
+            }
             
 
         }
