@@ -1,7 +1,10 @@
 <template>  
     <div class="wrapper">
       <post-list :posts="posts" @remove="removePost"></post-list>
-      <post-form @create="addPost"></post-form>
+      <my-dialog v-model:show="dialogVisible">
+          <post-form @create="addPost"></post-form>
+      </my-dialog>
+      <button @click="showDialog">Создать пост</button>
     </div>
 </template>
 
@@ -21,17 +24,24 @@
                     {id: 2, name: 'Js2', description: 'Description2'},
                     {id: 3, name: 'Js3', description: 'Description3'},
                 ],
+                dialogVisible: false
             }
         },
 
         methods: {
             addPost(newPost) {
                 this.posts.push(newPost);
+                this.dialogVisible = false
               
             },
             removePost(post) {
                 this.posts = this.posts.filter(p => p.id !== post.id)
-            }
+            },
+
+            showDialog () {
+                this.dialogVisible = true
+            },
+
             
 
         }
