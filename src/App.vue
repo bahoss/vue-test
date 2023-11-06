@@ -5,8 +5,16 @@
       <my-dialog v-model:show="dialogVisible">
           <post-form @create="addPost"></post-form>
       </my-dialog>
-      <my-button @click="showDialog">Создать пост</my-button>
+      <div class="app__btns">
+         <my-button @click="showDialog">Создать пост</my-button>
+         <my-select 
+            v-model="selectedSort" 
+            :options="sortOptions"
+          />
+      </div>
+     
       <my-button @click="fetchPosts">Fetch</my-button></div>
+
 </template>
 
 <script>
@@ -24,6 +32,11 @@
                 posts: [ ],
                 dialogVisible: false,
                 isPostLoading: false,
+                selectedSort: '',
+                sortOptions: [
+                    { name: 'By name', value: 'title' },
+                    { name: 'By description', value: 'body' }
+                ]
             }
         },
 
@@ -81,5 +94,9 @@
     display: flex;
     flex-direction: column;
     gap: 25px;
+}
+.app__btns {
+    display: flex;
+    justify-content: space-between;
 }
 </style>
