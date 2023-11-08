@@ -15,6 +15,14 @@
       </div>
      
       <my-button @click="fetchPosts">Fetch</my-button></div>
+      <div class="page__wrapper">
+        <div v-for="pageNumber in totalPages" :key="pageNumber" class="page" :class="{
+            'current-page': Number(pageNumber) === page
+        }" @click="changePage(pageNumber)">
+          {{pageNumber}}
+      </div>
+      </div>
+      
 
 </template>
 
@@ -39,6 +47,9 @@
                     { name: 'By description', value: 'description' }
                 ],
                 searchQuery: '',
+                page: 1,
+                limit: 10,
+                totalPages: 0,
             }
         },
 
@@ -55,11 +66,18 @@
             showDialog () {
                 this.dialogVisible = true
             },
+
+            changePage(pageNumber) {
+                this.page = pageNumber
+            },
             
             async fetchPosts() {
                 try {
                     this.isPostLoading = true
-                   const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=5')
+                   const response = await axios.get('https://jsonplaceholder.typicode.com/posts', { params: {
+                       _page: this.page,
+                       _limit: this.limit
+                   }})
                    this.posts = response.data.map(post=> {
                        return {
                            id: post.id,
@@ -67,7 +85,7 @@
                            description: post.body
                        }
                    })
-                   console.log({response})
+                   this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
                 } catch (error) {
                     
                 } finally {
@@ -91,6 +109,12 @@
             sortedAndSearchedPosts() {
                 return this.sortedPosts.filter(post => post.name.toLowerCase().includes(this.searchQuery.toLowerCase()))
             }
+        },
+
+        watch: {
+            page() {
+               this.fetchPosts() 
+            }
         }
        
     }
@@ -111,5 +135,21 @@
 .app__btns {
     display: flex;
     justify-content: space-between;
+}
+
+.page__wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+}
+
+.page {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.current-page {
+    background-color: blueviolet;
 }
 </style>
