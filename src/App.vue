@@ -1,6 +1,6 @@
 <template>  
     <div class="wrapper">
-      <post-list v-if="!isPostLoading" :posts="posts" @remove="removePost"></post-list>
+      <post-list v-if="!isPostLoading" :posts="sortedPosts" @remove="removePost"></post-list>
       <div v-else>Loading...</div>
       <my-dialog v-model:show="dialogVisible">
           <post-form @create="addPost"></post-form>
@@ -34,8 +34,8 @@
                 isPostLoading: false,
                 selectedSort: '',
                 sortOptions: [
-                    { name: 'By name', value: 'title' },
-                    { name: 'By description', value: 'body' }
+                    { name: 'By name', value: 'name' },
+                    { name: 'By description', value: 'description' }
                 ]
             }
         },
@@ -78,6 +78,14 @@
 
         mounted() {
             this.fetchPosts()
+        },
+       
+        computed: {
+            sortedPosts() {
+                return [...this.posts].sort((post1, post2) => {
+                    return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
+                })
+            }
         }
        
     }
