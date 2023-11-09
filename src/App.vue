@@ -15,13 +15,14 @@
       </div>
      
       <my-button @click="fetchPosts">Fetch</my-button></div>
-      <div class="page__wrapper">
+      <!-- <div class="page__wrapper">
         <div v-for="pageNumber in totalPages" :key="pageNumber" class="page" :class="{
             'current-page': Number(pageNumber) === page
         }" @click="changePage(pageNumber)">
           {{pageNumber}}
-      </div>
-      </div>
+       </div>
+      </div> -->
+      <div ref="scrollTarget" class="observer"></div>
       
 
 </template>
@@ -91,6 +92,26 @@
                 } finally {
                     this.isPostLoading = false
                 }
+            },
+            async fetchMorePosts() {
+                try {
+                    const response = await axios.get('https://jsonplaceholder.typicode.com/posts', { params: {
+                       _page: this.page,
+                       _limit: this.limit
+                   }})
+                   this.posts = [...this.posts, ...response.data.map(post=> {
+                       return {
+                           id: post.id,
+                           name: post.title,
+                           description: post.body
+                       }
+                   })]
+                   this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+                } catch (error) {
+                    
+                } finally {
+                    
+                }
             }
             
 
@@ -98,6 +119,21 @@
 
         mounted() {
             this.fetchPosts()
+            console.log(this.$refs.scrollTarget)
+            let options = {
+                rootMargin: "0px",
+                threshold: 1.0,
+            };
+
+            const callback = (entries, observer) => {
+                if (entries[0].isIntersecting && this.page < this.totalPages) {
+                    this.page += 1
+                    this.fetchMorePosts()
+                }
+            };
+
+            let observer = new IntersectionObserver(callback, options);
+            observer.observe(this.$refs.scrollTarget);
         },
        
         computed: {
@@ -112,11 +148,11 @@
         },
 
         watch: {
-            page() {
+           /*  page() {
                this.fetchPosts() 
             }
-        }
-       
+         */
+       }
     }
 </script>
 
