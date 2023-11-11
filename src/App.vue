@@ -13,7 +13,6 @@
             :options="sortOptions"
           />
       </div>
-     
       <my-button @click="fetchPosts">Fetch</my-button></div>
       <!-- <div class="page__wrapper">
         <div v-for="pageNumber in totalPages" :key="pageNumber" class="page" :class="{
