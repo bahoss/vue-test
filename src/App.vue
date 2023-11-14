@@ -1,16 +1,20 @@
 <template>
+    <nav-bar></nav-bar>
     <div class="wrapper">
         <router-view></router-view>
     </div>
 </template>
 
 <script>
+    import NavBar from '@/components/NavBar.vue'
     export default {
-        
+        components: {
+            NavBar
+        }
     }
 </script>
 
-<style  scoped>
+<style>
     * {
         margin: 0;
         padding: 0;
