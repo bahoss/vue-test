@@ -1,18 +1,19 @@
 <template>  
     <div>
-      <my-input v-model="searchQuery" placeholder="Search..."></my-input>
-      <post-list v-if="!isPostLoading" :posts="sortedAndSearchedPosts" @remove="removePost"></post-list>
-      <div v-else>Loading...</div>
-      <my-dialog v-model:show="dialogVisible">
-          <post-form @create="addPost"></post-form>
-      </my-dialog>
-      <div class="app__btns">
+        <div class="app__btns">
          <my-button @click="showDialog">Создать пост</my-button>
          <my-select 
             v-model="selectedSort" 
             :options="sortOptions"
           />
       </div>
+      <my-input v-model="searchQuery" placeholder="Search..."></my-input>
+      <post-list v-if="!isPostLoading" :posts="sortedAndSearchedPosts" @remove="removePost"></post-list>
+      <div v-else>Loading...</div>
+      <my-dialog v-model:show="dialogVisible">
+          <post-form @create="addPost"></post-form>
+      </my-dialog>
+      
       <my-button @click="fetchPosts">Fetch</my-button></div>
       <!-- <div class="page__wrapper">
         <div v-for="pageNumber in totalPages" :key="pageNumber" class="page" :class="{
@@ -21,7 +22,7 @@
           {{pageNumber}}
        </div>
       </div> -->
-      <div ref="scrollTarget" class="observer"></div>
+      <div v-intersection="fetchMorePosts" class="observer"></div>
       
 
 </template>
@@ -118,21 +119,8 @@
 
         mounted() {
             this.fetchPosts()
-            console.log(this.$refs.scrollTarget)
-            let options = {
-                rootMargin: "0px",
-                threshold: 1.0,
-            };
-
-            const callback = (entries, observer) => {
-                if (entries[0].isIntersecting && this.page < this.totalPages) {
-                    this.page += 1
-                    this.fetchMorePosts()
-                }
-            };
-
-            let observer = new IntersectionObserver(callback, options);
-            observer.observe(this.$refs.scrollTarget);
+           
+           
         },
        
         computed: {

@@ -1,6 +1,7 @@
 <template>
         <form @submit.prevent class="form">
             <my-input 
+                v-focus
                 v-model="post.name"
                 placeholder="Name"
             />
